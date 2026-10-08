@@ -6,7 +6,7 @@ public class CreateBall : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Vector3 pos = (this.transform.position + new Vector3(0, 3, 0));
+        Vector3 pos = (this.transform.position + new Vector3(9, 1, 9));
         Instantiate(Ball,pos,Quaternion.identity);
     }
 
