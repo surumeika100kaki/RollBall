@@ -20,6 +20,7 @@ public class CreateMaze : MonoBehaviour
                 maze[x, y] = true;
             }
         }
+        //スタートとゴールを決める
         maze[1, 1] = false;
         maze[20, 20] = false;
 
@@ -38,14 +39,53 @@ public class CreateMaze : MonoBehaviour
             }
             maze[currentX, currentY] = false;
         }
-        //ランダムルート用の穴あけ
+        // 3. ループや分岐を作るためのランダム穴あけ（孤立した道を作らないよう、既存の道に隣接する壁のみを対象にする）
         for (int x = 1; x <= 20; x++)
         {
             for (int y = 1; y <= 20; y++)
             {
                 if (maze[x, y] == true)
                 {
-                    if (Random.value < 0.3f)
+                    // 上下左右のいずれかが道(false)である壁のみ、確率で道にする（孤立した道の防止）
+                    if (HasPathNeighbor(x, y) && Random.value < 0.5f)
+                    {
+                        maze[x, y] = false;
+                    }
+                }
+            }
+        }
+        RemoveIsolatedWalls();
+    }
+        /// <summary>
+    /// 上下左右に「道(false)」が隣接しているか判定する
+    /// </summary>
+    private bool HasPathNeighbor(int x, int y)
+    {
+        if (x > 0 && !maze[x - 1, y]) return true;
+        if (x < maxHorizon - 1 && !maze[x + 1, y]) return true;
+        if (y > 0 && !maze[x, y - 1]) return true;
+        if (y < maxVertical - 1 && !maze[x, y + 1]) return true;
+        return false;
+    }
+
+    /// <summary>
+    /// 四方をすべて道に囲まれた孤立した壁を道に変換する
+    /// </summary>
+    private void RemoveIsolatedWalls()
+    {
+        for (int x = 1; x <= 20; x++)
+        {
+            for (int y = 1; y <= 20; y++)
+            {
+                if (maze[x, y] == true)
+                {
+                    // 上下左右すべてが道(false)の場合、孤立した壁となるため道に変更する
+                    bool up = (y < maxVertical - 1) && !maze[x, y + 1];
+                    bool down = (y > 0) && !maze[x, y - 1];
+                    bool left = (x > 0) && !maze[x - 1, y];
+                    bool right = (x < maxHorizon - 1) && !maze[x + 1, y];
+
+                    if (up && down && left && right)
                     {
                         maze[x, y] = false;
                     }
