@@ -28,6 +28,13 @@ public class StageMove : MonoBehaviour
         float verticalInput = _playerInput.ReadValue<Vector2>().y;
 
         //オブジェクトを回転させる処理
-        _stage.transform.Rotate(verticalInput * 0.2f, 0, horizontalInput * -1 * 0.2f);
+        //_stage.transform.Rotate(verticalInput * 0.2f, 0, horizontalInput * -1 * 0.2f);
+        //Vector2をVector3に変換
+        Vector3 rotation = new Vector3(verticalInput,0f,horizontalInput * -1);
+        //オイラー角に変換
+        Quaternion tilt = Quaternion.Euler(rotation.x,0f,rotation.z);
+        _stage.GetComponent<Rigidbody>().MoveRotation(
+            _stage.GetComponent<Rigidbody>().transform.rotation * tilt
+        );
     }
 }

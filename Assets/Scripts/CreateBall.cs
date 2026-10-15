@@ -9,10 +9,4 @@ public class CreateBall : MonoBehaviour
         Vector3 pos = (this.transform.position + new Vector3(9, 1, 9));
         Instantiate(Ball,pos,Quaternion.identity);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
